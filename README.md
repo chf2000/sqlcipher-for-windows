@@ -14,7 +14,7 @@ nmake # most recent version should work
 OpenSSL (compiled with [OpenSSL libraries](http://slproweb.com/products/Win32OpenSSL.html) provided by Shining Light Productions) x86/x64
 
 ## Compile
-Use Makefile.msc provided by this project which should work by default or configure include path, library path, etc, according to your environment. 
+Using Makefile.msc provided by this project which should work by default or you can configure include path, library path, etc, according to your environment. 
 
 Open x86/x64 Native Tools Command Prompt for VS 2022 according to the architecture of your environment.
 Change Directory to this project. Input following command.
