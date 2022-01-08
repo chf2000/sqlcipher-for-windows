@@ -28,9 +28,13 @@ And you should get sqlcipher.exe/.dll/.lib.
 
 ## Test
 OS Version: Windows 11 21H2 version 22000.376
+
 Toolchain: MSVC v143 - VS2022
+
 Target: x64_win32
+
 SDK: Windows 10 SDK 10.0.19041.0
+
 Status: Pass
 
 # Begin SQLCipher README.md
