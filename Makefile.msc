@@ -285,9 +285,9 @@ SQLITE3H = sqlite3.h
 #
 !IFNDEF SQLITE3DLL
 !IF $(FOR_WIN10)!=0
-SQLITE3DLL = winsqlite3.dll
+SQLITE3DLL = winsqlcipher.dll
 !ELSE
-SQLITE3DLL = sqlite3.dll
+SQLITE3DLL = sqlcipher.dll
 !ENDIF
 !ENDIF
 
@@ -295,9 +295,9 @@ SQLITE3DLL = sqlite3.dll
 #
 !IFNDEF SQLITE3LIB
 !IF $(FOR_WIN10)!=0
-SQLITE3LIB = winsqlite3.lib
+SQLITE3LIB = winsqlcipher.lib
 !ELSE
-SQLITE3LIB = sqlite3.lib
+SQLITE3LIB = sqlcipher.lib
 !ENDIF
 !ENDIF
 
@@ -305,9 +305,9 @@ SQLITE3LIB = sqlite3.lib
 #
 !IFNDEF SQLITE3EXE
 !IF $(FOR_WIN10)!=0
-SQLITE3EXE = winsqlite3shell.exe
+SQLITE3EXE = winsqlciphershell.exe
 !ELSE
-SQLITE3EXE = sqlite3.exe
+SQLITE3EXE = sqlcipher.exe
 !ENDIF
 !ENDIF
 
@@ -316,9 +316,9 @@ SQLITE3EXE = sqlite3.exe
 #
 !IFNDEF SQLITE3EXEPDB
 !IF $(FOR_WIN10)!=0
-SQLITE3EXEPDB =
+SQLITE3EXEPDB = /pdb:sqlciphersh.pdb
 !ELSE
-SQLITE3EXEPDB = /pdb:sqlite3sh.pdb
+SQLITE3EXEPDB = /pdb:sqlciphersh.pdb
 !ENDIF
 !ENDIF
 
@@ -1010,8 +1010,8 @@ TLIBS =
 # default to file, 2 to default to memory, and 3 to force temporary
 # tables to always be in memory.
 #
-TCC = $(TCC) -DSQLITE_TEMP_STORE=1
-RCC = $(RCC) -DSQLITE_TEMP_STORE=1
+TCC = $(TCC) -DSQLITE_TEMP_STORE=2 -DSQLITE_HAS_CODEC -I"C:\\Program Files\\OpenSSL-Win64\\include"
+RCC = $(RCC) -DSQLITE_TEMP_STORE=2 -DSQLITE_HAS_CODEC -I"C:\\Program Files\\OpenSSL-Win64\\include"
 
 # Enable/disable loadable extensions, and other optional features
 # based on configuration. (-DSQLITE_OMIT*, -DSQLITE_ENABLE*).
@@ -1215,6 +1215,10 @@ LDFLAGS = $(LDOPTS)
 TCLLIBPATHS = $(TCLLIBPATHS) /LIBPATH:$(TCLLIBDIR)
 TCLLIBS = $(TCLLIBS) $(LIBTCL)
 !ENDIF
+
+LTLIBPATHS = $(LTLIBPATHS) /LIBPATH:"C:\\Program Files\\OpenSSL-Win64\\lib" /LIBPATH:"C:\\Program Files\\OpenSSL-Win64\\lib\\VC"
+LTLIBS = $(LTLIBS) capi.lib dasync.lib ec_internal_test.lib libapps.lib libcrypto.lib libssl_static.lib libssl.lib libtestutil.lib loader_attic.lib openssl.lib ossltest.lib p_test.lib padlock.lib libcrypto64MD.lib libcrypto64MDd.lib libcrypto64MT.lib libcrypto64MTd.lib libssl64MD.lib libssl64MDd.lib libssl64MT.lib libssl64MTd.lib
+
 
 # If zlib support is enabled, add the linker options for it.
 #

@@ -1,3 +1,39 @@
+# SQLCipher for windows
+Windows build of SQLCipher 4.5.0 community using OpenSSL v3.0.1 by following instructions of [How to compile SQLCipher on Win64](https://www.bookstack.cn/read/sqlitebrowser/3bb023949f875542.md).
+## Dependency
+### Compiler:
+cl # most recent version should work
+
+### Make:
+nmake # most recent version should work
+
+### Tools:
+[ActiveTcl](https://www.activestate.com/activetcl/downloads)
+
+### Library:
+OpenSSL (compiled with [OpenSSL libraries](http://slproweb.com/products/Win32OpenSSL.html) provided by Shining Light Productions) x86/x64
+
+## Compile
+Use Makefile.msc provided by this project which should work by default or configure include path, library path, etc, according to your environment. 
+
+Open x86/x64 Native Tools Command Prompt for VS 2022 according to the architecture of your environment.
+Change Directory to this project. Input following command.
+
+
+```
+nmake /f Makefile.msc
+```
+
+And you should get sqlcipher.exe/.dll/.lib.
+
+## Test
+OS Version: Windows 11 21H2 version 22000.376
+Toolchain: MSVC v143 - VS2022
+Target: x64_win32
+SDK: Windows 10 SDK 10.0.19041.0
+Status: Pass
+
+# Begin SQLCipher README.md
 ## SQLCipher
 
 SQLCipher extends the [SQLite](https://www.sqlite.org) database library to add security enhancements that make it more suitable for encrypted local data storage like:
