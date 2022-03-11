@@ -39,12 +39,17 @@
 #include "btreeInt.h"
 #include "pager.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
+
 /* extensions defined in pager.c */ 
 void *sqlite3PagerGetCodec(Pager*);
 void sqlite3PagerSetCodec(Pager*, void *(*)(void*,void*,Pgno,int),  void (*)(void*,int,int),  void (*)(void*), void *);
 int sqlite3pager_is_mj_pgno(Pager*, Pgno);
 void sqlite3pager_error(Pager*, int);
 void sqlite3pager_reset(Pager *pPager);
+/* end extensions defined in pager.c */
 
 #if !defined (SQLCIPHER_CRYPTO_CC) \
    && !defined (SQLCIPHER_CRYPTO_LIBTOMCRYPT) \
@@ -59,7 +64,7 @@ void sqlite3pager_reset(Pager *pPager);
 #define CIPHER_STR(s) #s
 
 #ifndef CIPHER_VERSION_NUMBER
-#define CIPHER_VERSION_NUMBER 4.5.0
+#define CIPHER_VERSION_NUMBER 4.5.1
 #endif
 
 #ifndef CIPHER_VERSION_BUILD
@@ -111,49 +116,6 @@ void sqlite3pager_reset(Pager *pPager);
 #define CIPHER_MAX_KEY_SZ 64
 #endif
 
-#ifdef __ANDROID__
-#include <android/log.h>
-#endif
-
-#ifdef CODEC_DEBUG
-#ifdef __ANDROID__
-#define CODEC_TRACE(...) {__android_log_print(ANDROID_LOG_DEBUG, "sqlcipher", __VA_ARGS__);}
-#else
-#define CODEC_TRACE(...)  {fprintf(stderr, __VA_ARGS__);fflush(stderr);}
-#endif
-#else
-#define CODEC_TRACE(...)
-#endif
-
-#ifdef CODEC_DEBUG_MUTEX
-#define CODEC_TRACE_MUTEX(...)  CODEC_TRACE(__VA_ARGS__)
-#else
-#define CODEC_TRACE_MUTEX(...)
-#endif
-
-#ifdef CODEC_DEBUG_MEMORY
-#define CODEC_TRACE_MEMORY(...)  CODEC_TRACE(__VA_ARGS__)
-#else
-#define CODEC_TRACE_MEMORY(...)
-#endif
-
-#ifdef CODEC_DEBUG_PAGEDATA
-#define CODEC_HEXDUMP(DESC,BUFFER,LEN)  \
-  { \
-    int __pctr; \
-    printf(DESC); \
-    for(__pctr=0; __pctr < LEN; __pctr++) { \
-      if(__pctr % 16 == 0) printf("\n%05x: ",__pctr); \
-      printf("%02x ",((unsigned char*) BUFFER)[__pctr]); \
-    } \
-    printf("\n"); \
-    fflush(stdout); \
-  }
-#else
-#define CODEC_HEXDUMP(DESC,BUFFER,LEN)
-#endif
-
-/* end extensions defined in pager.c */
  
 /*
 **  Simple shared routines for converting hex char strings to binary data
@@ -198,6 +160,9 @@ static int cipher_isHex(const unsigned char *hex, int sz){
 #define TEST_FAIL_MIGRATE 0x04
 unsigned int sqlcipher_get_test_flags(void);
 void sqlcipher_set_test_flags(unsigned int);
+int sqlcipher_get_test_rand(void);
+void sqlcipher_set_test_rand(int);
+int sqlcipher_get_test_fail(void);
 #endif
 
 /* extensions defined in crypto_impl.c */
@@ -337,6 +302,36 @@ int sqlcipher_get_mem_security(void);
 int sqlcipher_find_db_index(sqlite3 *db, const char *zDb);
 
 int sqlcipher_codec_ctx_integrity_check(codec_ctx *, Parse *, char *);
+
+int sqlcipher_set_log(const char *destination);
+void sqlcipher_set_log_level(unsigned int level);
+void sqlcipher_log(unsigned int tag, const char *message, ...);
+
+#define SQLCIPHER_LOG_NONE          0x00
+#define SQLCIPHER_LOG_ERROR         0x01
+#define SQLCIPHER_LOG_WARN          0x02
+#define SQLCIPHER_LOG_INFO          0x04
+#define SQLCIPHER_LOG_DEBUG         0x08
+#define SQLCIPHER_LOG_TRACE         0x10
+#define SQLCIPHER_LOG_ALL           0xffffffff
+
+void sqlcipher_vdbe_return_string(Parse*, const char*, const char*, int);
+
+#ifdef CODEC_DEBUG_PAGEDATA
+#define CODEC_HEXDUMP(DESC,BUFFER,LEN)  \
+  { \
+    int __pctr; \
+    printf(DESC); \
+    for(__pctr=0; __pctr < LEN; __pctr++) { \
+      if(__pctr % 16 == 0) printf("\n%05x: ",__pctr); \
+      printf("%02x ",((unsigned char*) BUFFER)[__pctr]); \
+    } \
+    printf("\n"); \
+    fflush(stdout); \
+  }
+#else
+#define CODEC_HEXDUMP(DESC,BUFFER,LEN)
+#endif
 
 #endif
 #endif
